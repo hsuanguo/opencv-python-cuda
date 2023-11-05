@@ -1,8 +1,8 @@
-# Origina docker file : https://github.com/opencv/opencv-python/tree/4.x/docker/manylinux2014
+# Original docker file: https://github.com/opencv/opencv-python/tree/4.x/docker/manylinux2014
 
 FROM quay.io/pypa/manylinux2014_x86_64:latest
 
-# Arguments for the build, those below are the default values and will be overridden by docker build script
+# Below, you'll find the default values for the build arguments, which will be replaced by the settings specified in the Docker build script.
 
 # --------------------------------------------------------------------------------
 
@@ -17,6 +17,9 @@ ARG CUDA_VERSION=11.7
 ARG DOWNLOADED_PKG_DIR=./downloads
 ARG CUDNN_TAR_FILE=cudnn-linux-x86_64-8.6.0.163_cuda11-archive.tar.xz
 ARG VIDEO_CODEC_SDK_FILE=Video_Codec_SDK_12.1.14.zip
+
+ARG CUDA_MARJOR_VERSION_ARG=11
+ARG CUDNN_MAJOR_VERSION_ARG=8
 
 # --------------------------------------------------------------------------------
 
@@ -173,6 +176,9 @@ USER ci
 
 # Git security vulnerability: https://github.blog/2022-04-12-git-security-vulnerability-announced
 RUN git config --global --add safe.directory /io
+
+ENV CUDA_MAJOR_VERSION=$CUDA_MARJOR_VERSION_ARG
+ENV CUDNN_MAJOR_VERSION=$CUDNN_MAJOR_VERSION_ARG
 
 ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig:/ffmpeg_build/lib/pkgconfig
 ENV LDFLAGS -L/ffmpeg_build/lib

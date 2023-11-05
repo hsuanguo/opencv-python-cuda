@@ -52,6 +52,11 @@ cuda_toolkit_file="$(basename "${cuda_toolkit_url}")"
 # get cuda version from cuda run file name, for example, 11.7.1_515.65.01 -> 11.7
 cuda_version="$(echo "${cuda_toolkit_file}" | sed -n 's/cuda_\([0-9]\+\.[0-9]\+\)\.[0-9]\+_\([0-9]\+\.[0-9]\+\.[0-9]\+\)_linux.run/\1/p')"
 
+# extract cudnn version, for example : cudnn-linux-x86_64-8.6.0.163_cuda11-archive.tar.xz -> 8.6, cudnn-linux-aarch64-8.6.0.163_cuda11-archive.tar.xz -> 8.6
+cudnn_version=$(echo "$cudnn_archive_file" | grep -oP '\d+\.\d+\.\d+\.\d+')
+
+major_cuda_version=$(echo $cuda_version | cut -d. -f1)
+major_cudnn_version=$(echo $cudnn_version | cut -d. -f1)
 
 docker_file="./docker/Dockerfile_${target}"
 
@@ -60,7 +65,8 @@ echo "cuda toolkit url: ${cuda_toolkit_file}"
 echo "cudnn archive file: ${cudnn_archive_file}"
 echo "video codec sdk archive file: ${video_codec_sdk_archive_file}"
 echo "docker file: ${docker_file}"
-
+echo "major cuda version: ${major_cuda_version}"
+echo "major cudnn version: ${major_cudnn_version}"
 
 docker build -t "${docker_image_tag}" -f "${docker_file}" \
   --build-arg DOWNLOADED_PKG_DIR=${download_dir} \
@@ -68,6 +74,8 @@ docker build -t "${docker_image_tag}" -f "${docker_file}" \
   --build-arg CUDA_TOOLKIT_RUN_FILE=${cuda_toolkit_file} \
   --build-arg CUDA_VERSION=${cuda_version} \
   --build-arg CUDNN_TAR_FILE=${cudnn_archive_file} \
+  --build-arg CUDNN_MAJOR_VERSION_ARG=${major_cudnn_version} \
+  --build-arg CUDA_MARJOR_VERSION_ARG=${major_cuda_version} \
   --build-arg UID=$(id -u) \
   --build-arg VIDEO_CODEC_SDK_FILE=${video_codec_sdk_archive_file} \
   .

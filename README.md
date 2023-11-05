@@ -36,3 +36,7 @@ To build wheel:
 ```
 
 This script will build the wheel using the docker image built in the previous step, please refer to the script to change opencv version, wheel name, etc.
+
+Once done, you can find the built wheel under `./build/opencv-python/wheelhouse`.
+
+Note: To reduce wheel size, CUDA and CuDNN libraries are not packed into the wheel, please make sure you have installed them to **use** the wheel.

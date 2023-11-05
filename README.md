@@ -29,3 +29,10 @@ Please refer to `./scripts/build_docker.sh` fro more details.
 
 ## Build the wheel
 
+To build wheel:
+
+```bash
+./scripts/build_wheel.sh
+```
+
+This script will build the wheel using the docker image built in the previous step, please refer to the script to change opencv version, wheel name, etc.

@@ -2,6 +2,19 @@
 
 set -e
 
+# package name will be, opencv-${WHEEL_CU_VERSION}-python. eg, opencv-cu11x-python
+WHEEL_CU_VERSION=cu11x
+
+# docker image used to build the wheel
+DOCKER_IMAGE=opencv-manylinux-cu11x
+
+# the opencv-python repo to build
+opencv_python_repo="${1:-https://github.com/jasonjiang8866/opencv-python-cuda.git}"
+
+# the opencv-python branch to build
+opencv_python_branch="${2:-4.x.cudafix}"
+
+# DO NOT change the following lines
 REPO_DIR=.
 PROJECT_SPEC=opencv-python
 MB_PYTHON_VERSION=3.7
@@ -9,14 +22,12 @@ TRAVIS_PYTHON_VERSION=3.7
 MB_ML_VER=2014
 TRAVIS_BUILD_DIR=/home/ci
 CONFIG_PATH=travis_config.sh
-DOCKER_IMAGE=opencv-manylinux-cu11x
 USE_CCACHE=0
 UNICODE_WIDTH=32
 PLAT=x86_64
 SDIST=0
 ENABLE_HEADLESS=0
 ENABLE_CONTRIB=1
-WHEEL_CU_VERSION=cu11x
 
 script_dir=$(
   cd "$(dirname "$0")"
@@ -40,9 +51,9 @@ mkdir "${build_dir}"
 cd "${build_dir}"
 
 # clone opencv-python repo
-git clone https://github.com/jasonjiang8866/opencv-python-cuda.git opencv-python
+git clone "${opencv_python_repo}" opencv-python
 cd opencv-python
-git checkout 4.x.cudafix
+git checkout "${opencv_python_branch}"
 
 # insert the following after  "-DPYTHON3_LIMITED_API=ON", in setup.py
 sed -i 's/-DPYTHON3_LIMITED_API=ON/-DPYTHON3_LIMITED_API=ON", "-DCUDA_FAST_MATH=ON", "-DWITH_CUBLAS=ON", "-DWITH_CUFFT=ON", "-DWITH_NVCUVID=ON", "-DWITH_NVCUVENC=ON", "-DWITH_CUDA=ON", "-DWITH_CUDNN=ON/g' setup.py

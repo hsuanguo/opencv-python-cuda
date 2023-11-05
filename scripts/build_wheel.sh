@@ -65,8 +65,6 @@ cp -f ${repository_dir}/patch_auditwheel_whitelist.py ./patch_auditwheel_whiteli
 # update wheel name in setup.py
 sed -i "s/skbuild.setup(/package_name='opencv-${WHEEL_CU_VERSION}-python'\n    skbuild.setup(/g" setup.py
 
-exit 0
-
 # https://github.com/matthew-brett/multibuild/issues/116
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ARCH_FLAGS=" "; fi
 source multibuild/travis_steps.sh

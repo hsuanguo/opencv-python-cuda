@@ -45,7 +45,6 @@ fi
 # get the file name
 video_codec_sdk_archive_file="$(basename "${video_codec_sdk_archive}")"
 
-
 # get cuda run file name from url
 cuda_toolkit_file="$(basename "${cuda_toolkit_url}")"
 

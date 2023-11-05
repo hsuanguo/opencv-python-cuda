@@ -16,9 +16,7 @@ PLAT=x86_64
 SDIST=0
 ENABLE_HEADLESS=0
 ENABLE_CONTRIB=1
-MAJOR_CUDA_VERSION=11
-MAJOR_CUDNN_VERSION=8
-
+WHEEL_CU_VERSION=cu11x
 
 script_dir=$(
   cd "$(dirname "$0")"
@@ -61,12 +59,13 @@ sed -i 's/retry docker pull $docker_image/#retry docker pull $docker_image/g' mu
 # change docker run --rm to docker run --rm --privileged --gpus all  in file multibuild/travis_linux_steps.sh
 sed -i 's/docker run --rm/docker run --rm --privileged --gpus all/g' multibuild/travis_linux_steps.sh
 
-# update auditwheel multibuild/common_utils.sh
-# inject https://github.com/tlc-pack/auditwheel to skip cuda libs
-#sed -i 's/repair_wheelhouse $wheelhouse/\n    (git clone https:\/\/github.com\/tlc-pack\/auditwheel \&\& cd auditwheel \&\& git checkout 3.3.0 \&\& pip install .)\n    rm -rf auditwheel\n    repair_wheelhouse $wheelhouse/g' multibuild/common_utils.sh
+# replace patch_auditwheel_whitelist.py(force)
+cp -f ${repository_dir}/patch_auditwheel_whitelist.py ./patch_auditwheel_whitelist.py
 
-sed -i 's/repair_wheelhouse $wheelhouse/#repair_wheelhouse $wheelhouse/g' multibuild/common_utils.sh
+# update wheel name in setup.py
+sed -i "s/skbuild.setup(/package_name='opencv-${WHEEL_CU_VERSION}-python'\n    skbuild.setup(/g" setup.py
 
+exit 0
 
 # https://github.com/matthew-brett/multibuild/issues/116
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ARCH_FLAGS=" "; fi

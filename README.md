@@ -2,6 +2,11 @@
 
 Dockerised scripts based on project [opencv-python](https://github.com/opencv/opencv-python)  to build opencv python wheels with CUDA support.
 
+Enabled features:
+
+- Full CUDA features: `WITH_CUDA`, `WITH_CUDNN`, `CUDA_FAST_MATH`, `WITH_CUBLAS`, `WITH_CUFFT`.
+- CUDA HW Codec: `WITH_NVCUVENC`, `WITH_NVCUVID`.
+
 ## Prerequisites
 
 - NVDIA Driver installed, and please make sure the CUDA version shown in `nvidia-smi` >= the cuda version(default=11.7) you would like to build for the wheel.
